@@ -1,0 +1,15 @@
+restaurant opens
+at start of restaurant activities...
+-generate customers
+-distribute customers across 5 tables randomly
+-randomly select waiter
+-randomly selected waiter selects table to approach
+-waiter randomly picks customer to serve
+-customer places order
+-waiter takes order to kitchen to process
+-kitchen processes order 
+-kitchen signals waiter
+-waiter serves customer
+-customer eats food
+-customer pays for food
+-customer leaves restaurant

@@ -1,7 +1,10 @@
 require_relative "customer"
+require_relative "table"
 
 class Restaurant
   attr_accessor :waiters, :customers
+
+  include Enumerable
 
   def initialize
   	@waiters   = []
@@ -11,13 +14,61 @@ class Restaurant
   
   def initiate_restaurant_activity
   	customers_enter_restaurant
-  	@customers.each do |customer|
-  	  puts "id: #{customer.id} age: #{customer.age}"
+  	customers_sit_and_wait
+  	@tables.each do |table|
+  	  puts "table number: #{table.table_number} number of customers: #{table.seated_customers.size}"
+      table.seated_customers.each do |customer|
+      	puts "customer id: #{customer.id}"
+      end
   	end
+  	puts "#{@customers.size} customers"
   end
   
 
   private
+
+  def customers_sit_and_wait
+  	generate_tables
+  	customers_sit_across_tables
+  end
+
+  def customers_sit_across_tables
+  	@randoms = []
+  	@tables.each do |table|
+  	  5.times do
+  	    @temp = randomize_customer    
+  	     table.seated_customers << @customer if !condition?(@customer)
+  	  end
+  	end
+  end
+
+  def randomize_customer
+  	@temp = @customers[rand(@customers.size)] 
+  	if check? 
+  	  @temp = randomize_customer
+  	  @randoms << @temp
+  	  @customer = @temp		
+  	else
+  	  @randoms << @temp 
+  	  @customer = @temp
+  	end
+  end
+
+  def check?
+  	@randoms.include?(@temp) 
+  end
+
+  def condition?(customer)
+  	@tables.any? do |table|
+  	  table.seated_customers.include?(customer)
+  	end
+  end
+
+  def generate_tables
+    6.times do |table_number|
+      @tables << Table.new(table_number) if table_number != 0
+    end	
+  end
 
   def customers_enter_restaurant
   	generate_customers
@@ -25,16 +76,7 @@ class Restaurant
   
   def generate_customers
   	25.times do
-  	  @customers << Customer.new(id_generator, rand(18..90)) 
+  	  @customers << Customer.new 
   	end
-  end
-
-  def id_generator
-    array = %w{ A B C D E F G H I J 1 2 3 4 5 6 7 8 9 0 }
-    @id = []
-    7.times do 
-      @id << array[rand(array.size)]
-    end
-    @id.join("")
   end
 end
