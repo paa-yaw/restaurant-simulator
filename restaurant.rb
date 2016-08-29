@@ -1,5 +1,6 @@
 require_relative "customer"
 require_relative "table"
+require_relative "waiter"
 
 class Restaurant
   attr_accessor :waiters, :customers
@@ -7,6 +8,7 @@ class Restaurant
   include Enumerable
 
   def initialize
+    @name_array           = %w{ Ruth Rachel Abigail Rose Lilian April Rebecca Jessica Priscilla }
     @all_seated_customers = []
     @spare_tables         = []
     @randoms              = []
@@ -18,25 +20,70 @@ class Restaurant
   
   def initiate_restaurant_activity
   	customers_enter_restaurant
+    message "Customers entering restaurant..."
+    sleep(rand(1..10))
   	customers_sit_and_wait
-  	@tables.each do |table|
-      if table.seated_customers.any?
-  	  puts "Table No.: #{table.table_number} number of customers: #{table.seated_customers.size}"
-      table.seated_customers.each do |customer|
-      	puts "customer id: #{customer.id}"
-      end
-      end
-      puts ""
-  	end
-  	puts "#{@customers.size} customers"
+    # thread customer and waiter interaction?
+    waiter_approaches_table_and_takes_order
+  end
+  
+  def customer_places_order(customers, waiter)
+    @random_customer = customer_randomizer(customers)
+    @random_customer.places_order(waiter)
   end
   
 
+
+
   private
+
+  def customer_randomizer(customers)
+    customers[rand(customers.size)]
+  end
+
+  def waiter_approaches_table_and_takes_order
+    waiter_generator    
+    # print_out_waiters
+    randomize_waiter
+    @waiter.approaches_table
+    return nil
+  end
+
+  def randomize_waiter
+    @waiter = @waiters[rand(@waiters.size)]
+  end
+
+  def print_out_waiters
+    @waiters.each do |waiter|
+      message "name: #{waiter.name} age: #{waiter.age} state: #{waiter.state}"
+    end
+  end
+
+  def waiter_generator
+    @name_array.each do |name|
+      @waiters << Waiter.new(name, @tables, self)
+    end
+  end
 
   def customers_sit_and_wait
   	generate_tables
   	customers_sit_across_tables
+
+    @tables.each do |table|
+      if table.seated_customers.any?
+        message "**********TABLE No.: #{table.table_number}***********"  
+        message "number of customers seated: #{table.seated_customers.size}"
+        space
+        space
+        table.seated_customers.each do |customer|
+          message "customer id: #{customer.id} age: #{customer.age}"
+        sleep(rand(1..5))
+        end
+      end
+      space
+      space
+    end
+    message "#{@customers.size} customers"
   end
 
   def customers_sit_across_tables
@@ -123,5 +170,13 @@ class Restaurant
   	rand(1..25).times do
   	  @customers << Customer.new 
   	end
+  end
+
+  def space
+    puts ""
+  end
+
+  def message(message)
+    puts message
   end
 end

@@ -2,6 +2,7 @@ restaurant opens
 at start of restaurant activities...
 -generate customers
 -distribute customers across 5 tables randomly
+
 -randomly select waiter
 -randomly selected waiter selects table to approach
 -waiter randomly picks customer to serve
@@ -13,3 +14,14 @@ at start of restaurant activities...
 -customer eats food
 -customer pays for food
 -customer leaves restaurant
+
+NOTE: states of a waiter include the following:
+- states =>free, engaged
+- history of orders
+- walks over to a chosen table
+- takes order from randomly chosen customer
+- takes order to the kitchen
+- brings processed order from kitchen to customer
+- serves customer
+- leaves
+- receives payment when customer finishes eating
