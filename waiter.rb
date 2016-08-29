@@ -27,6 +27,7 @@ class Waiter
 
   def takes_order(order)
   	sleep(rand(1..2))
+  	message ""
   	message "#{self.name}: alright #{order.customer.id}, will be right back with your order
   	 Order ID: #{order.id} :)"
   	self.state = @states[1]
