@@ -28,9 +28,14 @@ class Waiter
   def takes_order(order)
   	sleep(rand(1..2))
   	message ""
-  	message "#{self.name}: alright customer ID: #{order.customer.id}, will be right back with your order
-  	 Order ID: #{order.id} :)"
-  	self.state = @states[1]
+    if order.customer.waiter.nil?
+      order.customer.waiter = self
+      message "#{self.name}: alright customer ID: #{order.customer.id}, will be right back with your order
+      Order ID: #{order.id} :)"
+      self.state = @states[1]
+    else
+      message "#{self.name} is walking away"
+    end
   end
 
 

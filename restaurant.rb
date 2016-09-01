@@ -20,7 +20,7 @@ class Restaurant
   
   def initiate_restaurant_activity
   	customers_enter_restaurant
-    message "Customers entering restaurant..."
+    message "#{@customers.size} customers entering restaurant..."
     sleep(rand(1..10))
   	customers_sit_and_wait
     # thread customer and waiter interaction?
@@ -42,20 +42,26 @@ class Restaurant
   end
 
   def waiter_approaches_table_and_takes_order
+    @array_of_randomized_waiters = []
     waiter_generator    
     # print_out_waiters
-    randomize_waiter
-    @waiter.approaches_table
+    @waiters.size.times do 
+      randomize_waiter
+    end
+    @array_of_randomized_waiters.uniq.each do |waiter|
+      waiter.approaches_table
+    end
     return nil
   end
 
   def randomize_waiter
-    @waiter = @waiters[rand(@waiters.size)]
+   @array_of_randomized_waiters << @waiters[rand(@waiters.size)]
   end
 
   def print_out_waiters
     @waiters.each do |waiter|
       message "name: #{waiter.name} age: #{waiter.age} state: #{waiter.state}"
+      space
     end
   end
 
@@ -167,7 +173,7 @@ class Restaurant
   end
   
   def generate_customers
-  	rand(1..25).times do
+  	1.times do
   	  @customers << Customer.new 
   	end
   end

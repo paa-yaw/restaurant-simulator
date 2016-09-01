@@ -1,12 +1,12 @@
 class Order
-  attr_accessor :id, :customer, :state, :states
+  attr_accessor :id, :customer, :waiter, :state, :states
   
   def initialize(customer)
   	@id       = id_generator
   	@states   = ["PENDING", "COMPLETED"]
   	@state    = @states[0]
   	@customer = customer
-  	@waiter   = 0
+  	@waiter   = nil
   end
 
   private
