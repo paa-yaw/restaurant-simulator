@@ -197,7 +197,7 @@ class Restaurant
   end
   
   def generate_customers
-  	rand(1..5).times do
+  	rand(1..25).times do
   	  @customers << Customer.new 
   	end
   end

@@ -86,7 +86,7 @@ class Waiter
       @free_customers << customer if customer.state == "FREE"
     end
     customers.any? do |customer|
-        customer.state == "FREE"
+      customer.state == "FREE"
     end
   end
 
