@@ -44,6 +44,14 @@ class Restaurant
     end
     @random_customer.places_order(waiter) if @random_customer.state == "FREE"
   end
+
+  def stop_or_continue?(count)
+    @return = nil
+    if count == 5
+      message "other waiters have been informed not to check tables"
+     return @return = 0
+    end
+  end
   
 
 
@@ -64,6 +72,7 @@ class Restaurant
     all_waiters_randomized?
     @array_of_randomized_waiters.uniq.each do |waiter|
       waiter.approaches_table
+      break if @return == 0
     end
     return nil
   end

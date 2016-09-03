@@ -33,6 +33,7 @@ class Waiter
       @restaurant.customer_places_order(@table.seated_customers, self)
     elsif @count == 5
       message "exhausted all the tables. All customers are currently engaged, and the remaining tables are empty :(" 
+      @restaurant.stop_or_continue?(@count)
       space   
     elsif @table.seated_customers.empty?
       message "#{self.name} walking away because no one is here!" 
@@ -93,25 +94,34 @@ class Waiter
   def message(message)
   	puts message
   end
+
   def space
     puts ""
   end
 
   def choose_table
   	@table = @tables[rand(@tables.size)] 
-    message "#{self.name}'s first choice TABLE NO.: #{@table.table_number}"
+    message "#{self.name}'s checking TABLE NO.: #{@table.table_number}..."
   	if @table.seated_customers.size == 0 || !free_customers?(@table.seated_customers)
+      message "TABLE NO.: #{@table.table_number} has no customers" if @table.seated_customers.empty?
+      message "TABLE NO.: #{@table.table_number} has no free customers" if !free_customers?(@table.seated_customers) && @table.seated_customers.any?
   	  @tables.each do |table|
         if free_customers?(table.seated_customers) && table.seated_customers.any?
           return @table = table
           break
         else
-          next if table.table_number == @table.table_number
           @count += 1
-          message "visited TABLE NO.: #{table.table_number}"
+          next if table.table_number == @table.table_number
+          message "checking TABLE NO.: #{table.table_number}.."
+          sleep(rand(1..3))
+          message "TABLE NO.: #{table.table_number} has no customers" if table.seated_customers.empty?
+          message "TABLE NO.: #{table.table_number} has no free customers" if !free_customers?(table.seated_customers) && table.seated_customers.any?
+          sleep(rand(1..3))
+          space
           next
         end
       end
   	end
+    return @count if @count == 5
   end
 end
