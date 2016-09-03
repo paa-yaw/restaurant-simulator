@@ -2,6 +2,8 @@ require_relative "order"
 
 class Customer
   attr_accessor :id, :age, :order, :waiter, :state, :states
+
+  include Enumerable
   
   def initialize
   	@id     = id_generator
@@ -17,13 +19,13 @@ class Customer
     if self.state == "FREE"
       message "customer #{self.id} places order..."
       message "here is my order => order id: #{self.order.id} state: #{self.order.state}  owner: #{self.order.customer.id}"
+      sleep(rand(1..3))
+      waiter.takes_order(@order)
+      self.state = @states[1]
+      message "customer ID: #{self.id}, state: #{self.state}"
     elsif self.state == "ENGAGED"
-      message "customer #{self.id} has already been attended to by #{self.waiter.name}"        
+      message "customer #{self.id}: #{self.waiter.name} has already taken my order. Thank you! :)"        
     end
-    sleep(rand(1..3))
-    waiter.takes_order(@order)
-    self.state = @states[1]
-    message "customer ID: #{self.id}, state: #{self.state}"
     space
     space
   end

@@ -23,13 +23,26 @@ class Restaurant
     message "#{@customers.size} customers entering restaurant..."
     sleep(rand(1..10))
   	customers_sit_and_wait
-    # thread customer and waiter interaction?
     waiter_approaches_table_and_takes_order
+
+    @engaged, @free = 0, 0
+    @customers.each do |customer|
+      if customer.state == "ENGAGED"
+        @engaged += 1
+      elsif customer.state == "FREE"
+        @free += 1
+      end
+    end
+    message "#@engaged customers engaged, #@free customers free"
   end
   
   def customer_places_order(customers, waiter)
-    @random_customer = customer_randomizer(customers)
-    @random_customer.places_order(waiter)
+    @random_customer = customer_randomizer(customers) 
+    if @random_customer.state == "ENGAGED"
+      message "this customer #{@random_customer.id} is engaged by #{@random_customer.waiter.name}, sorry"
+      customer_places_order(customers, waiter)
+    end
+    @random_customer.places_order(waiter) if @random_customer.state == "FREE"
   end
   
 
@@ -48,14 +61,21 @@ class Restaurant
     @waiters.size.times do 
       randomize_waiter
     end
+    all_waiters_randomized?
     @array_of_randomized_waiters.uniq.each do |waiter|
       waiter.approaches_table
     end
     return nil
   end
 
+  def all_waiters_randomized?
+    @waiters.each do |waiter|
+      @array_of_randomized_waiters << waiter if !@array_of_randomized_waiters.include?(waiter)
+    end
+  end
+
   def randomize_waiter
-   @array_of_randomized_waiters << @waiters[rand(@waiters.size)]
+    @array_of_randomized_waiters << @waiters[rand(@waiters.size)]
   end
 
   def print_out_waiters
@@ -76,7 +96,7 @@ class Restaurant
   	customers_sit_across_tables
 
     @tables.each do |table|
-      if table.seated_customers.any?
+      if table.seated_customers.any? 
         message "**********TABLE No.: #{table.table_number}***********"  
         message "number of customers seated: #{table.seated_customers.size}"
         space
@@ -85,11 +105,15 @@ class Restaurant
           message "customer id: #{customer.id} age: #{customer.age}"
         sleep(rand(1..5))
         end
+      else
+        message "**********TABLE No.: #{table.table_number}***********"  
+        message "number of customers seated: #{table.seated_customers.size}"
+        space
+        space
       end
       space
       space
     end
-    message "#{@customers.size} customers"
   end
 
   def customers_sit_across_tables
@@ -173,7 +197,7 @@ class Restaurant
   end
   
   def generate_customers
-  	1.times do
+  	rand(1..5).times do
   	  @customers << Customer.new 
   	end
   end
