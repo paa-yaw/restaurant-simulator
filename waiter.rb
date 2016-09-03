@@ -56,14 +56,14 @@ class Waiter
   	message ""
     if order.customer.waiter.nil?
       order.customer.waiter = self
-      message "#{self.name}: alright customer ID: #{order.customer.id}, will be right back with your order
+      message "#{self.name}: alright #{order.customer.name}, will be right back with your order
       Order ID: #{order.id} :)"
       self.state = @states[1]
       self.engaged_customers << order.customer
       # list of customers engaged by this waiter
-      print "customers #{self.name} currently serving:"
+      print "customers #{self.name} currently serving: "
       self.engaged_customers.each do |customer|
-        print "#{customer.id}, "
+        print "#{customer.name}, "
       end
       space
     else

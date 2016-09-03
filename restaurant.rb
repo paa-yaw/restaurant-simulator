@@ -51,7 +51,7 @@ class Restaurant
   def customer_places_order(customers, waiter)
     @random_customer = customer_randomizer(customers) 
     if @random_customer.state == "ENGAGED"
-      message "this customer #{@random_customer.id} is engaged by #{@random_customer.waiter.name}, sorry"
+      message "this customer #{@random_customer.name} is engaged by #{@random_customer.waiter.name}, sorry"
       customer_places_order(customers, waiter)
     end
     @random_customer.places_order(waiter) if @random_customer.state == "FREE"
@@ -129,7 +129,7 @@ class Restaurant
         space
         space
         table.seated_customers.each do |customer|
-          message "customer id: #{customer.id} age: #{customer.age}"
+          message "customer name: #{customer.name} age: #{customer.age}"
         sleep(rand(1..5))
         end
       else

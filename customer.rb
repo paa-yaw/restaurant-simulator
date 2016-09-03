@@ -1,12 +1,13 @@
 require_relative "order"
+require "faker"
 
 class Customer
-  attr_accessor :id, :age, :order, :waiter, :state, :states
+  attr_accessor :id, :age, :name, :order, :waiter, :state, :states
 
   include Enumerable
   
   def initialize
-  	@id     = id_generator
+    @name   = name_generator
   	@age    = rand(18..90)
     @order  = nil
     @states = ["FREE", "ENGAGED"]
@@ -17,14 +18,14 @@ class Customer
   def places_order(waiter)
     self.order = Order.new(self)
     if self.state == "FREE"
-      message "customer #{self.id} places order..."
-      message "here is my order => order id: #{self.order.id} state: #{self.order.state}  owner: #{self.order.customer.id}"
+      message "#{self.name} places order..."
+      message "here is my order => order id: #{self.order.id} state: #{self.order.state}  owner: #{self.order.customer.name}"
       sleep(rand(1..3))
       waiter.takes_order(@order)
       self.state = @states[1]
-      message "customer ID: #{self.id}, state: #{self.state}"
+      message "customer name: #{self.name}, state: #{self.state}"
     elsif self.state == "ENGAGED"
-      message "customer #{self.id}: #{self.waiter.name} has already taken my order. Thank you! :)"        
+      message "customer #{self.name}: #{self.waiter.name} has already taken my order. Thank you! :)"        
     end
     space
     space
@@ -33,17 +34,12 @@ class Customer
 
   private
 
-  def id_generator
-    array = %w{ A B C D E F G H I J 1 2 3 4 5 6 7 8 9 0 }
-    @id = []
-    7.times do 
-      @id << array[rand(array.size)]
-    end
-    @id.join("")
-  end
-
   def space
     puts ""
+  end
+
+  def name_generator
+    (1.times.map { Faker::Name.name }).join("")
   end
 
   def message(message)
