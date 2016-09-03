@@ -16,6 +16,7 @@ class Restaurant
   	@customers            = []
   	@tables               = []
     @count                = 0
+    waiter_generator
   end
   
   def initiate_restaurant_activity
@@ -33,7 +34,18 @@ class Restaurant
         @free += 1
       end
     end
-    message "#@engaged customers engaged, #@free customers free"
+    # message "#@engaged customers engaged, #@free customers free"
+    # check if free customers still remain
+    sleep(rand(1..3))
+    if free_customers?
+      # share remaining free customers amongst waiters randomly
+      waiter_approaches_table_and_takes_order
+    end
+
+   if free_customers?
+   else
+    message "no free customers, all have been served"
+   end
   end
   
   def customer_places_order(customers, waiter)
@@ -58,13 +70,19 @@ class Restaurant
 
   private
 
+  def free_customers?
+    @customers.any? do |customer|
+      customer.state == "FREE"
+    end
+  end
+
   def customer_randomizer(customers)
     customers[rand(customers.size)]
   end
 
   def waiter_approaches_table_and_takes_order
     @array_of_randomized_waiters = []
-    waiter_generator    
+    # waiter_generator    
     # print_out_waiters
     @waiters.size.times do 
       randomize_waiter

@@ -61,9 +61,11 @@ class Waiter
       self.state = @states[1]
       self.engaged_customers << order.customer
       # list of customers engaged by this waiter
+      print "customers #{self.name} currently serving:"
       self.engaged_customers.each do |customer|
-        message "customers #{self.name} currently serving: #{customer.id}"
+        print "#{customer.id}, "
       end
+      space
     else
       if free_customers?(@restaurant.customers)
         message "#{self.name} is walking away to..."
