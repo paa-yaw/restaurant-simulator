@@ -21,9 +21,12 @@ class Restaurant
   
   def initiate_restaurant_activity
   	customers_enter_restaurant
+
     message "#{@customers.size} customers entering restaurant..."
     sleep(rand(1..10))
+
   	customers_sit_and_wait
+
     waiter_approaches_table_and_takes_order
 
     @engaged, @free = 0, 0
@@ -38,20 +41,17 @@ class Restaurant
     # check if free customers still remain
     sleep(rand(1..3))
     if free_customers?
-      # share remaining free customers amongst waiters randomly
-      waiter_approaches_table_and_takes_order
+      message "@free free customers left"
+    else
+      message "no free customers, all are engaged."
     end
-
-   if free_customers?
-   else
-    message "no free customers, all have been served"
-   end
   end
   
   def customer_places_order(customers, waiter)
     @random_customer = customer_randomizer(customers) 
     if @random_customer.state == "ENGAGED"
       message "this customer #{@random_customer.name} is engaged by #{@random_customer.waiter.name}, sorry"
+      customers.delete(@random_customer)
       customer_places_order(customers, waiter)
     end
     @random_customer.places_order(waiter) if @random_customer.state == "FREE"
@@ -91,6 +91,10 @@ class Restaurant
     @array_of_randomized_waiters.uniq.each do |waiter|
       waiter.approaches_table
       break if @return == 0
+    end
+
+    if free_customers?
+     waiter_approaches_table_and_takes_order 
     end
     return nil
   end

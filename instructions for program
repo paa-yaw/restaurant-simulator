@@ -25,3 +25,6 @@ NOTE: states of a waiter include the following:
 - serves customer
 - leaves
 - receives payment when customer finishes eating
+
+a list of orders served by restaurant with their respective price tags
+can calculate sales in a day for restaurant
