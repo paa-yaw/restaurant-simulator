@@ -56,15 +56,21 @@ class Waiter
   	message ""
     if order.customer.waiter.nil?
       order.customer.waiter = self
+      order.waiter = self
       message "#{self.name}: alright #{order.customer.name}, will be right back with your order
       Order ID: #{order.id} :)"
+
+      message "#{self.name} walking towards kitchen..."
+      sleep(rand(1..3))
+      
+      @restaurant.waiter_takes_order_to_kitchen(order)
       self.state = @states[1]
       self.engaged_customers << order.customer
       # list of customers engaged by this waiter
-      print "customers #{self.name} currently serving: "
-      self.engaged_customers.each do |customer|
-        print "#{customer.name}, "
-      end
+      # print "customers #{self.name} currently serving: "
+      # self.engaged_customers.each do |customer|
+      #   print "#{customer.name}, "
+      # end
       space
     else
       if free_customers?(@restaurant.customers)
@@ -76,9 +82,21 @@ class Waiter
     end
   end
 
+  def call(order)
+    serve_customer(order)
+  end
+
 
 
   private
+
+  def serve_customer(order)
+    message "#{self.name} walking towards TABLE NO. #{order.customer.table_no}"
+    sleep(rand(1..3))
+    message "here is your meal #{order.customer.name}, bon apetite :)"
+    space
+    space
+  end
 
   def select_any_free_customer
     @free_customers[rand(@free_customers.size)]

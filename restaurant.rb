@@ -1,6 +1,7 @@
 require_relative "customer"
 require_relative "table"
 require_relative "waiter"
+require_relative "kitchen"
 
 class Restaurant
   attr_accessor :waiters, :customers
@@ -17,6 +18,7 @@ class Restaurant
   	@tables               = []
     @count                = 0
     waiter_generator
+    @kitchen              = Kitchen.new
   end
   
   def initiate_restaurant_activity
@@ -45,12 +47,25 @@ class Restaurant
     else
       message "no free customers, all are engaged."
     end
+
+    message "#{@kitchen.orders.count} orders received and being processed by the kitchen."
+    
+    space
+    space
+  
+    kitchen_processing_order_and_waiters_serving_customers
+  end
+
+  def waiter_takes_order_to_kitchen(order)
+    message "kitchen receives order with Order ID: #{order.id}, owner: #{order.customer.name}"
+    @kitchen.receives_order(order)
   end
   
   def customer_places_order(customers, waiter)
     @random_customer = customer_randomizer(customers) 
     if @random_customer.state == "ENGAGED"
-      message "this customer #{@random_customer.name} is engaged by #{@random_customer.waiter.name}, sorry"
+      # message "this customer #{@random_customer.name} is engaged by #{@random_customer.waiter.name}, sorry"
+      space
       customers.delete(@random_customer)
       customer_places_order(customers, waiter)
     end
@@ -69,6 +84,14 @@ class Restaurant
 
 
   private
+
+  def kitchen_processing_order_and_waiters_serving_customers
+    @kitchen.processing_orders(@kitchen.orders)
+  end
+
+  def kitchen_receives_order(order)
+    @kitchen.receives_order(order)
+  end
 
   def free_customers?
     @customers.any? do |customer|
@@ -90,6 +113,9 @@ class Restaurant
     all_waiters_randomized?
     @array_of_randomized_waiters.uniq.each do |waiter|
       waiter.approaches_table
+      space
+      space
+      space
       break if @return == 0
     end
 
@@ -151,7 +177,7 @@ class Restaurant
   	@tables.each do |table|
   	  5.times do
   	    randomize_customer 
-  	    table.seated_customers << @customer if !condition?(@customer) 
+  	    table.seated_customers << @customer && @customer.table_no = table.table_number if !condition?(@customer) 
         @all_seated_customers << @customer
   	  end
   	end

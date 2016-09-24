@@ -2,7 +2,7 @@ require_relative "order"
 require "faker"
 
 class Customer
-  attr_accessor :id, :age, :name, :order, :waiter, :state, :states
+  attr_accessor :id, :age, :name, :order, :waiter, :state, :states, :table_no
 
   include Enumerable
   
@@ -23,7 +23,7 @@ class Customer
       sleep(rand(1..3))
       waiter.takes_order(@order)
       self.state = @states[1]
-      message "customer name: #{self.name}, state: #{self.state}"
+      # message "customer name: #{self.name}, state: #{self.state}"
     elsif self.state == "ENGAGED"
       message "customer #{self.name}: #{self.waiter.name} has already taken my order. Thank you! :)"        
     end
